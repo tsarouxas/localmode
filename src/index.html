@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="css/main.css">
+  </head>
+  <body style="-webkit-app-region: drag">
+    <div id="lmain">
+      <div id="lmain_left">
+        Left
+      </div>
+      <div id="lmain_right">
+        Right
+        <span id="cpu">-</span>
+        <span id="pwd">-</span>
+      </div>
+    </div>
+    
+    <script>
+      const {ipcRenderer} = require('electron');
+
+      async function runCommand(cmd) {
+        const res = await ipcRenderer.sendSync('runCommand', cmd);
+        return res;
+      }
+
+
+      // Async message handler
+      ipcRenderer.on('asynchronous-reply', (event, arg) => {
+            console.log(arg);
+         });
+
+         ipcRenderer.on('cpu', (event, arg) => {
+            console.log(arg);
+            document.getElementById('cpu').innerHTML = arg.toFixed(2);
+  
+         });
+      ipcRenderer.on('pwd', (event, arg) => {
+            console.log(arg);
+            document.getElementById('pwd').innerHTML = arg;
+         });
+
+         ipcRenderer.send('asynchronous-message', 'async ping');
+
+  </script>
+   </body>
+</html>
