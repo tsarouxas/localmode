@@ -17,38 +17,84 @@
 
       </div>
       <div id="lmain_right">
-        Right
-        <>
+        <span class="btn btn_restart">Restart Valet</span>
         <span id="cpu">-</span>
         <span id="pwd">-</span>
       </div>
     </div>
-    
     <script>
       const {ipcRenderer} = require('electron');
+
+      /* This is contain all the sites lists on our local machine */
+      let vSites;
 
       async function runCommand(cmd) {
         const res = await ipcRenderer.sendSync('runCommand', cmd);
         return res;
       }
 
+      /* Functions */
+      const restart_valet =()=>{
+        console.log('restarting valet services');
+        ipcRenderer.send('restart-valet', 'restart-valet');
+      }
+
+      const click_site =()=>{
+        console.log('Clicked on Site');
+        //ipcRenderer.send('restart-valet', 'restart-valet');
+      }
+
+      /* Event Handlers */
+      document.querySelector('.btn_restart').addEventListener('click', () => {
+        restart_valet();
+      }); 
 
       // Async message handler
       ipcRenderer.on('asynchronous-reply', (event, arg) => {
             console.log(arg);
          });
 
+      /* After receiving Valet Restart response */
+         ipcRenderer.on('restart-valet-response', (event, arg) => {
+            console.log(arg);
+         });
+
+
          ipcRenderer.on('cpu', (event, arg) => {
             console.log(arg);
             document.getElementById('cpu').innerHTML = arg.toFixed(2);
   
          });
-      ipcRenderer.on('get_sites_list', (event, arg) => {
-            console.log(arg);
-            document.getElementById('l_sites').innerHTML = arg;
-            let aValetLinks = arg.split("\n");
-            aValetLinks.forEach((element) => {
-              console.log(element);
+        ipcRenderer.on('get_sites_list', (event, arg) => {
+            //console.log(arg);
+           // let elem_sites = document.getElementById('l_sites').innerHTML = arg;
+            let sValetLines = arg.split("\n");
+            sValetLines.forEach((element) => {
+             // console.log(element);
+             let valetLine = element.split("|");
+             let site_name = valetLine[1];
+             let site_domain = valetLine[3];
+             let site_is_secure = valetLine[2];
+             let site_path = valetLine[4];
+             //TODO: add to vSites
+
+              console.log('site name'+site_name);
+              console.log('site_domain'+site_domain);
+              console.log('site_is_secure'+site_is_secure);
+              console.log('site_path'+site_path);
+              //create each li on the sidebar with the current host Sites
+              if (site_name){
+              let new_site = document.createElement('div');
+              new_site.classList.add('site_li');
+              new_site.innerHTML = site_name;
+              document.getElementById('l_sites').appendChild(new_site);
+              new_site.addEventListener('click', () => {
+                click_site();
+              }); 
+              }
+                /* valetLine.forEach((row) => {
+                  console.log(row);
+               }); */
              });
 
          });

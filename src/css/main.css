@@ -53,5 +53,11 @@ body {
     font-size: 18px;
     color: #ffffff;
     font-weight: 600;}
-  #l_middle{height:90vh;}
+  #l_middle{height:90vh;width: 100%;}
   #l_footer{height:5vh;}
+  #l_sites{display: flex;
+    padding-right: 10px;
+    padding-left: 10px;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;}

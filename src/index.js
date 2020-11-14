@@ -3,7 +3,8 @@ const os = require('os-utils');
 const { exec } = require('child_process');
 const { spawn } = require('child_process');
 
-
+//TODO
+//https://github.com/electron/electron/issues/21674
 /* Event Handlers */
 
 
@@ -44,8 +45,6 @@ const createWindow = () => {
     webPreferences:{
       nodeIntegration: true
     },
-    /* resizable: false, */
-    frame: false,
     titleBarStyle: 'hidden'
   });
 
@@ -114,14 +113,22 @@ exec("valet links | sed '1,3d' | sed '$d'", (error, stdout, stderr) => {
   event.sender.send('get_sites_list',`${stdout}`);
 });
 
+})
 
 
-
-
-
-
-
-
+/* Valet Functions */
+ipcMain.on('restart-valet', (event, arg) => {
+  exec("valet restart", (error, stdout, stderr) => {
+    if (error) {
+        console.log(`error: ${error.message}`);
+        return;
+    }
+    if (stderr) {
+        console.log(`stderr: ${stderr}`);
+        return;
+    }
+    event.sender.send('restart-valet-response',`${stdout}`);
+  });
 })
 
 
