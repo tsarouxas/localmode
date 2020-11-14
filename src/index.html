@@ -8,10 +8,17 @@
   <body style="-webkit-app-region: drag">
     <div id="lmain">
       <div id="lmain_left">
-        Left
+        <div id="l_top">Local Sites</div>
+        <div id="l_middle">
+            <div id="l_sites"></div>
+        </div>
+        <div id="l_footer">footer</div>
+
+
       </div>
       <div id="lmain_right">
         Right
+        <>
         <span id="cpu">-</span>
         <span id="pwd">-</span>
       </div>
@@ -36,12 +43,17 @@
             document.getElementById('cpu').innerHTML = arg.toFixed(2);
   
          });
-      ipcRenderer.on('pwd', (event, arg) => {
+      ipcRenderer.on('get_sites_list', (event, arg) => {
             console.log(arg);
-            document.getElementById('pwd').innerHTML = arg;
-         });
+            document.getElementById('l_sites').innerHTML = arg;
+            let aValetLinks = arg.split("\n");
+            aValetLinks.forEach((element) => {
+              console.log(element);
+             });
 
-         ipcRenderer.send('asynchronous-message', 'async ping');
+         });
+         /*Start the Main Window - inform main process that we are ready to get a list of sites*/
+         ipcRenderer.send('main-start', 'Game start');
 
   </script>
    </body>

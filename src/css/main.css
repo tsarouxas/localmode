@@ -1,4 +1,31 @@
+@font-face {
+    font-family: Averta;
+    src: url('fonts/AvertaDemoPE-Regular.eot');
+    src: url('fonts/AvertaDemoPE-Regular.eot?#iefix') format('embedded-opentype'),
+    url('fonts/AvertaDemoPE-Regular.woff2') format('woff2'), url('fonts/AvertaDemoPE-Regular.woff') format('woff');
+    }
+    :not(input):not(textarea),
+:not(input):not(textarea)::after,
+:not(input):not(textarea)::before {
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: default;
+}
+input, button, textarea, :focus {
+    outline: none; // You should add some other style for :focus to help UX/a11y
+}
+a:not([draggable=true]), img:not([draggable=true]) {
+    -webkit-user-drag: none;
+    user-drag: none; /* Technically not supported in Electron yet */
+}
+a[href^="http://"],
+a[href^="https://"],
+a[href^="ftp://"] {
+    -webkit-user-drag: auto;
+    user-drag: auto; /* Technically not supported in Electron yet */
+}
 body {
+    font-family: 'Averta', Helvetica, Arial, sans-serif;
     padding:0;
     margin:0;
     width:100vw;
@@ -7,5 +34,24 @@ body {
     color: red;
   }
   #lmain{display:flex;}
-  #lmain_left{width:20vw;height:100vh;background-color: #00125a;}
-  #lmain_right{width:80vw;height:100vh}
+  #lmain_left{
+      color:#ffffff;
+    width: 220px;
+    height: 100vh;
+    display: flex;
+    background-color: #00125a;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;}
+
+  #lmain_right{width: -webkit-calc(100% - 200px);
+	width: -moz-calc(100% - 200px);
+    width: calc(100% - 200px);
+    height:100vh}
+  #l_top{height: 5vh;
+    padding-top: 20px;
+    font-size: 18px;
+    color: #ffffff;
+    font-weight: 600;}
+  #l_middle{height:90vh;}
+  #l_footer{height:5vh;}

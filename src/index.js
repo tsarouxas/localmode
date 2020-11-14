@@ -39,6 +39,8 @@ const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 680,
+    'minHeight': 600,
+    'minWidth': 1025,
     webPreferences:{
       nodeIntegration: true
     },
@@ -71,20 +73,20 @@ const createWindow = () => {
   });
 
   ipcMain.on('runCommand', async (event, arg) => {
-    event.returnValue = await exec('ls -al', shell_callback);
+    //event.returnValue = await exec('ls -al', shell_callback);
   });
 
 // Event handler for asynchronous incoming messages
-ipcMain.on('asynchronous-message', (event, arg) => {
+ipcMain.on('main-start', (event, arg) => {
   console.log(arg)
   // Event emitter for sending asynchronous messages
 
 //Get a list of all websites on localhost
 //let res = exec('ls -al', shell_callback);
+
 const child = spawn('pwd');
 //const child = spawn('find', ['.', '-type', 'f']);
-
-child.stdout.on('data', (data) => {
+/* child.stdout.on('data', (data) => {
   console.log(`child stdout:\n${data}`);
   //mainWindow.webContents.send('pwd',`child stdout:\n${data}`);
   event.sender.send('pwd',`child stdout:\n${data}`);
@@ -97,7 +99,28 @@ child.stderr.on('data', (data) => {
 child.on('exit', function (code, signal) {
   console.log('child process exited with ' +
               `code ${code} and signal ${signal}`);
+}); */
+
+/* Get a list of all current localhost links */
+exec("valet links | sed '1,3d' | sed '$d'", (error, stdout, stderr) => {
+  if (error) {
+      console.log(`error: ${error.message}`);
+      return;
+  }
+  if (stderr) {
+      console.log(`stderr: ${stderr}`);
+      return;
+  }
+  event.sender.send('get_sites_list',`${stdout}`);
 });
+
+
+
+
+
+
+
+
 
 })
 
