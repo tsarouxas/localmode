@@ -1,106 +1,143 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <meta charset="utf-8">
     <title></title>
     <link rel="stylesheet" href="css/main.css">
-  </head>
-  <body style="-webkit-app-region: drag">
+</head>
+
+<body style="-webkit-app-region: drag">
     <div id="lmain">
-      <div id="lmain_left">
-        <div id="l_top">Local Sites</div>
-        <div id="l_middle">
-            <div id="l_sites"></div>
+        <div id="lmain_l">
+            <div id="l_l_top">Local Sites</div>
+            <div id="l_l_middle">
+                <div id="l_sites_container">
+                    <div id="l_sites">
+
+                    </div>
+                </div>
+            </div>
+            <div id="l_l_footer">Add A Site</div>
         </div>
-        <div id="l_footer">footer</div>
-
-
-      </div>
-      <div id="lmain_right">
-        <span class="btn btn_restart">Restart Valet</span>
-        <span id="cpu">-</span>
-        <span id="pwd">-</span>
-      </div>
+        <div id="lmain_r">
+            <div id="l_r_top">
+                <div id="l_rt_title">Site Title</div>
+                <div id="l_rt_folder">Site Folder</div>
+            </div>
+            <div id="l_r_middle">
+                <div id="l_rt_wordget">
+                    <div id="l_rt_wordget_username">WG user</div>
+                    <div id="l_rt_wordget_server">WG IP</div>
+                    <div id="l_rt_wordget_folder">WG Folder</div>
+                </div>
+            </div>
+            <span class="btn btn_restart">Restart Valet</span>
+            <span id="cpu">-</span>
+            <span id="pwd">-</span>
+        </div>
     </div>
     <script>
-      const {ipcRenderer} = require('electron');
+        const {
+            ipcRenderer
+        } = require('electron');
 
-      /* This is contain all the sites lists on our local machine */
-      let vSites;
+        /* This is contain all the sites lists on our local machine */
+        let aSites = [];
 
-      async function runCommand(cmd) {
-        const res = await ipcRenderer.sendSync('runCommand', cmd);
-        return res;
-      }
+        async function runCommand(cmd) {
+            const res = await ipcRenderer.sendSync('runCommand', cmd);
+            return res;
+        }
 
-      /* Functions */
-      const restart_valet =()=>{
-        console.log('restarting valet services');
-        ipcRenderer.send('restart-valet', 'restart-valet');
-      }
+        /* Functions */
+        const restart_valet = () => {
+            console.log('restarting valet services');
+            ipcRenderer.send('restart-valet', 'restart-valet');
+        }
 
-      const click_site =()=>{
-        console.log('Clicked on Site');
-        //ipcRenderer.send('restart-valet', 'restart-valet');
-      }
+        const click_site = () => {
+            console.log('Clicked on Site');
+            //ipcRenderer.send('restart-valet', 'restart-valet');
+        }
 
-      /* Event Handlers */
-      document.querySelector('.btn_restart').addEventListener('click', () => {
-        restart_valet();
-      }); 
+        /* Gets the site details and shows them on the right part */
+        const get_site_details = (site_id) => {
+            console.log('Getting details for site' + site_id);
+        }
 
-      // Async message handler
-      ipcRenderer.on('asynchronous-reply', (event, arg) => {
+
+
+        /* Event Handlers */
+        document.querySelector('.btn_restart').addEventListener('click', () => {
+            restart_valet();
+        });
+
+        // Async message handler
+        ipcRenderer.on('asynchronous-reply', (event, arg) => {
             console.log(arg);
-         });
+        });
 
-      /* After receiving Valet Restart response */
-         ipcRenderer.on('restart-valet-response', (event, arg) => {
+        /* After receiving Valet Restart response */
+        ipcRenderer.on('restart-valet-response', (event, arg) => {
             console.log(arg);
-         });
+        });
 
 
-         ipcRenderer.on('cpu', (event, arg) => {
+        ipcRenderer.on('cpu', (event, arg) => {
             console.log(arg);
             document.getElementById('cpu').innerHTML = arg.toFixed(2);
-  
-         });
+
+        });
         ipcRenderer.on('get_sites_list', (event, arg) => {
             //console.log(arg);
-           // let elem_sites = document.getElementById('l_sites').innerHTML = arg;
+            // let elem_sites = document.getElementById('l_sites').innerHTML = arg;
             let sValetLines = arg.split("\n");
+            let nSiteID = 0;
             sValetLines.forEach((element) => {
-             // console.log(element);
-             let valetLine = element.split("|");
-             let site_name = valetLine[1];
-             let site_domain = valetLine[3];
-             let site_is_secure = valetLine[2];
-             let site_path = valetLine[4];
-             //TODO: add to vSites
+                // console.log(element);
+                var oSite = {};
+                let valetLine = element.split("|");
+                let site_name = valetLine[1];
+                let site_domain = valetLine[3];
+                let site_is_secure = valetLine[2];
+                let site_path = valetLine[4];
 
-              console.log('site name'+site_name);
-              console.log('site_domain'+site_domain);
-              console.log('site_is_secure'+site_is_secure);
-              console.log('site_path'+site_path);
-              //create each li on the sidebar with the current host Sites
-              if (site_name){
-              let new_site = document.createElement('div');
-              new_site.classList.add('site_li');
-              new_site.innerHTML = site_name;
-              document.getElementById('l_sites').appendChild(new_site);
-              new_site.addEventListener('click', () => {
-                click_site();
-              }); 
-              }
+                //we assign a site id generated on each refresh - this is not permanent
+                nSiteID++;
+                //add to vSites
+
+                oSite.site_id = nSiteID;
+                oSite.site_name = site_name;
+                oSite.site_domain = site_domain;
+                oSite.site_is_secure = site_is_secure;
+                oSite.site_path = site_path;
+                aSites.push(oSite);
+
+                console.log('site name' + site_name);
+                console.log('site_domain' + site_domain);
+                console.log('site_is_secure' + site_is_secure);
+                console.log('site_path' + site_path);
+                //create each li on the sidebar with the current host Sites
+                if (site_name) {
+                    let new_site = document.createElement('div');
+                    new_site.classList.add('site_li');
+                    new_site.innerHTML = site_name;
+                    new_site.setAttribute("data-site-id", nSiteID);
+                    document.getElementById('l_sites').appendChild(new_site);
+                    new_site.addEventListener('click', () => {
+                        click_site();
+                    });
+                }
                 /* valetLine.forEach((row) => {
                   console.log(row);
                }); */
-             });
+            });
+            console.log(aSites);
+        });
+        /*Start the Main Window - inform main process that we are ready to get a list of sites*/
+        ipcRenderer.send('main-start', 'Game start');
+    </script>
+</body>
 
-         });
-         /*Start the Main Window - inform main process that we are ready to get a list of sites*/
-         ipcRenderer.send('main-start', 'Game start');
-
-  </script>
-   </body>
 </html>

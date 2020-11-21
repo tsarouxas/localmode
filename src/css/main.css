@@ -1,63 +1,103 @@
 @font-face {
     font-family: Averta;
     src: url('fonts/AvertaDemoPE-Regular.eot');
-    src: url('fonts/AvertaDemoPE-Regular.eot?#iefix') format('embedded-opentype'),
-    url('fonts/AvertaDemoPE-Regular.woff2') format('woff2'), url('fonts/AvertaDemoPE-Regular.woff') format('woff');
-    }
-    :not(input):not(textarea),
+    src: url('fonts/AvertaDemoPE-Regular.eot?#iefix') format('embedded-opentype'), url('fonts/AvertaDemoPE-Regular.woff2') format('woff2'), url('fonts/AvertaDemoPE-Regular.woff') format('woff');
+}
+
+ :not(input):not(textarea),
 :not(input):not(textarea)::after,
 :not(input):not(textarea)::before {
     -webkit-user-select: none;
     user-select: none;
     cursor: default;
 }
-input, button, textarea, :focus {
+
+input,
+button,
+textarea,
+ :focus {
     outline: none; // You should add some other style for :focus to help UX/a11y
 }
-a:not([draggable=true]), img:not([draggable=true]) {
+
+a:not([draggable=true]),
+img:not([draggable=true]) {
     -webkit-user-drag: none;
-    user-drag: none; /* Technically not supported in Electron yet */
+    user-drag: none;
+    /* Technically not supported in Electron yet */
 }
+
 a[href^="http://"],
 a[href^="https://"],
 a[href^="ftp://"] {
     -webkit-user-drag: auto;
-    user-drag: auto; /* Technically not supported in Electron yet */
+    user-drag: auto;
+    /* Technically not supported in Electron yet */
 }
+
 body {
     font-family: 'Averta', Helvetica, Arial, sans-serif;
-    padding:0;
-    margin:0;
-    width:100vw;
-    height:100vh;
+    padding: 0;
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
     background: url(../img/link.svg) repeat top left;
-    color: red;
-  }
-  #lmain{display:flex;}
-  #lmain_left{
-      color:#ffffff;
+    color: 000000;
+}
+
+#lmain {
+    display: flex;
+}
+
+#lmain_l {
+    color: #ffffff;
     width: 220px;
     height: 100vh;
     display: flex;
     background-color: #00125a;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: center;}
+    align-items: center;
+}
 
-  #lmain_right{width: -webkit-calc(100% - 200px);
-	width: -moz-calc(100% - 200px);
-    width: calc(100% - 200px);
-    height:100vh}
-  #l_top{height: 5vh;
+#lmain_r {
+    width: -webkit-calc(70% - 220px);
+    width: -moz-calc(70% - 220px);
+    width: calc(70% - 220px);
+    height: 100vh
+}
+
+#l_l_top {
+    height: 5vh;
     padding-top: 20px;
     font-size: 18px;
     color: #ffffff;
-    font-weight: 600;}
-  #l_middle{height:90vh;width: 100%;}
-  #l_footer{height:5vh;}
-  #l_sites{display: flex;
+    font-weight: 600;
+}
+
+#l_l_middle {
+    height: 90vh;
+    width: 100%;
+}
+
+#l_l_footer {
+    height: 5vh;
+}
+
+#l_sites_container {
+    width: 100%
+}
+
+#l_sites {
+    display: flex;
     padding-right: 10px;
     padding-left: 10px;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: flex-start;}
+    align-items: flex-start;
+}
+
+.site_li {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    width: 90%;
+}
