@@ -1,2 +1,11 @@
 node_modules
 out
+.DS_Store
+src/.DS_Store
+src/js/mobiscroll.javascript.min.js
+src/css/mobiscroll.javascript.min.css
+src/css/icons_mobiscroll.ttf
+src/css/mobiscroll.javascript.scss
+icons_mobiscroll.woff
+icons_mobiscroll.tff
+2pac.txt

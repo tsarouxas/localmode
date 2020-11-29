@@ -1,5 +1,6 @@
 import { app, BrowserWindow, ipcMain, shell } from 'electron';
 const os = require('os-utils');
+const fs = require('fs');
 const { exec } = require('child_process');
 const { spawn } = require('child_process');
 
@@ -71,14 +72,30 @@ const createWindow = () => {
 
     });
 
-    ipcMain.on('runCommand', async(event, arg) => {
+    ipcMain.on('update-wordget-credentials', (event, arg) => {
+        console.log('running update-wordget-credentials' + arg);
+        console.log(arg);
         //event.returnValue = await exec('ls -al', shell_callback);
+        let lyrics = 'But still I\'m having memories of high speeds when the cops crashed\n' +
+            'As I laugh, pushin the gas while my Glocks blast\n' +
+            'We was young and we was dumb but we had heart';
+
+        // write to a new file named 2pac.txt
+        fs.writeFile('2pac.txt', lyrics, (err) => {
+            // throws an error, you could also catch it here
+            if (err) throw err;
+
+            // success case, the file was saved
+            console.log('Lyric saved!');
+            event.sender.send('result-wordget-update', 'success');
+        });
+
     });
 
     // Event handler for asynchronous incoming messages
     ipcMain.on('main-start', (event, arg) => {
-        console.log(arg)
-            // Event emitter for sending asynchronous messages
+        console.log(arg);
+        // Event emitter for sending asynchronous messages
 
         //Get a list of all websites on localhost
         //let res = exec('ls -al', shell_callback);
@@ -100,7 +117,7 @@ const createWindow = () => {
                       `code ${code} and signal ${signal}`);
         }); */
 
-        /* Get a list of all current localhost links */
+        /* Get a list of all current localhost links and PING the frotend to REFRESH the list of sites as well as the oSites object */
         exec("valet links | sed '1,3d' | sed '$d'", (error, stdout, stderr) => {
             if (error) {
                 console.log(`error: ${error.message}`);

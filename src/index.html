@@ -4,46 +4,228 @@
 <head>
     <meta charset="utf-8">
     <title></title>
+    <link href="css/mobiscroll.javascript.min.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="css/main.css">
 </head>
 
 <body style="-webkit-app-region: drag">
     <div id="lmain">
         <div id="lmain_l">
-            <div id="l_l_top">Local Sites</div>
-            <div id="l_l_middle">
-                <div id="l_sites_container">
-                    <div id="l_sites">
+            <div id="lmain_l_inner">
+                <div id="l_l_top">Local Sites</div>
+                <div id="l_l_middle">
+                    <div id="l_sites_container">
+                        <div id="l_sites">
 
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div id="l_l_footer">Add A Site</div>
-        </div>
-        <div id="lmain_r">
-            <div id="l_r_top">
-                <div id="l_rt_title">Site Title</div>
-                <div id="l_rt_folder">Site Folder</div>
-            </div>
-            <div id="l_r_middle">
-                <div id="l_rt_wordget">
-                    <div id="l_rt_wordget_username">WG user</div>
-                    <div id="l_rt_wordget_server">WG IP</div>
-                    <div id="l_rt_wordget_folder">WG Folder</div>
+                <div id="l_l_footer">
+                    <div><button mbsc-button id="btn_add_new_site">Add New Site</button></div>
                 </div>
             </div>
-            <span class="btn btn_restart">Restart Valet</span>
-            <span id="cpu">-</span>
-            <span id="pwd">-</span>
+        </div>
+        <div id="lmain_r">
+            <div id="lmain_r_inner">
+                <div id="l_r_top">
+                    <div id="l_rt_title"></div>
+                    <div id="l_rt_url"><a class="btn_round" href="" target="_blank">View Site</a></div>
+                    <div id="l_rt_folder"></div>
+                    <div id="l_rt_is_secure"></div>
+                </div>
+                <div id="l_r_middle">
+
+                </div>
+            </div>
+
+            <!-- Single Website - Tabs -->
+            <div class="md-tab-bottom-nav">
+                <div id="tab-content" class="md-desktop-nav">
+                    <div mbsc-page>
+                        <ul id="single-site-tabs" class="mbsc-cloak">
+                            <li data-tab="md-tab-food" data-selected="true">Information</li>
+                            <li data-tab="md-tab-wordget">Synchronize</li>
+                            <li data-tab="md-tab-life">Tools</li>
+                        </ul>
+
+                        <div class="md-tab-food md-tab md-tab-sel">
+                            <h4>Site Information</h4>
+                            <p>
+                                French creative studio Black Pizza commissioned the photographer Erwan Fichou and the bio independant chef Julie Basset to make the series “Pizza is the New Black” : a collection of monochrome pizzas, cooked with insolite objets and perfumes such as crab,
+                                lichee, candies, lipsticks, green peas and green plants.
+                            </p>
+                        </div>
+                        <div id="l_rt_wordget" class="md-tab-wordget md-tab">
+                            <h4>Synchronize a local copy of the website using Wordget</h4>
+                            <div id="l_rt_wordget_main" mbsc-form class="mbsc-form-box">
+                                <div class="mbsc-grid mbsc-grid-fixed">
+                                    <div class="mbsc-row">
+                                        <!--Wordget Pull options-->
+                                        <div class="mbsc-col-3">
+                                            <div class="mbsc-form-group">
+                                                <div class="mbsc-row mbsc-justify-content-center">
+                                                    <div class="mbsc-col-12 mbsc-form-grid">
+                                                        <div class="mbsc-form-group-title" style="padding-bottom:20px">Wordget Options</div>
+                                                        <div class="mbsc-row">
+                                                            <div class="mbsc-col-12">
+                                                                <div>
+                                                                    <label for="wordget_option_files">Files</label>
+                                                                    <input mbsc-checkbox type="checkbox" id="wordget_option_files" class="wordget_option" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="mbsc-col-12">
+                                                                <div>
+                                                                    <label for="wordget_option_files">Database</label>
+                                                                    <input mbsc-checkbox type="checkbox" id="wordget_option_database" class="wordget_option" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="mbsc-col-12">
+                                                                <div>
+                                                                    <label for="wordget_option_files">Uploads</label>
+                                                                    <input mbsc-checkbox type="checkbox" id="wordget_option_uploads" class="wordget_option" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="mbsc-col-12">
+                                                                <button mbsc-button id="btn_wordget_submit" class="btn-large">Pull Site</button>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mbsc-col-1"></div>
+                                        <!--Wordget Credentials-->
+                                        <div class="mbsc-col-8">
+                                            <div class="mbsc-form-group">
+                                                <div class="mbsc-row mbsc-justify-content-center">
+                                                    <div class="mbsc-col-12 mbsc-form-grid">
+                                                        <div class="mbsc-form-group-title">Wordget Information</div>
+                                                        <div class="mbsc-row">
+                                                            <div class="mbsc-col-md-6 mbsc-col-12">
+                                                                <div>
+                                                                    <label for="email">Username</label>
+                                                                    <input mbsc-input data-input-style="box" data-label-style="floating" id="l_rt_wordget_username" name="rt_wg_username" class="ib_wordget" placeholder="Remote Username" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="mbsc-col-md-6 mbsc-col-12">
+                                                                <div>
+                                                                    <label for="pass">IP Address</label>
+                                                                    <input mbsc-input data-input-style="box" data-label-style="floating" id="l_rt_wordget_server" class="ib_wordget" placeholder="Remote Server IP Address" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="mbsc-row">
+                                                            <div class="mbsc-col-12">
+                                                                <div>
+                                                                    <label for="address">Folder</label>
+                                                                    <input mbsc-input data-input-style="box" data-label-style="floating" id="l_rt_wordget_folder" class="ib_wordget" placeholder="Remote Folder/Path" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <button mbsc-button id="btn_wordget_save">Save</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="md-tab-life md-tab">
+                            <h4>Tools</h4>
+                            <p>
+                                and disclose us touching images.
+                            </p>
+                            <div id="l_rt_actions">
+                                <span id="cpu">-</span>
+                                <span id="pwd">-</span>
+
+                                <div id="l_rt_actions_title">Actions</div>
+                                <div id="l_rt_actions_main">
+                                    <button mbsc-button id="btn_deactivate_site" class="btn_round">Deactivate Site</button>
+                                    <button mbsc-button class="btn btn_restart">Restart Valet</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <!--END Single Website - Tabs -->
+
         </div>
     </div>
+
+    <!--Popup Add a new Site -->
+    <div id="login" class="mbsc-cloak">
+        <div mbsc-form>
+            <div class="mbsc-form-group-inset">
+                <label>
+                  <input mbsc-input type="text" name="email" placeholder="Email" />
+              </label>
+                <label>
+                  <input mbsc-input name="password" type="text" placeholder="Password" data-password-toggle="true" data-icon-show="eye" data-icon-hide="eye-blocked" />
+              </label>
+            </div>
+            <div class="mbsc-align-center">or log in with one of your existing accounts</div>
+            <div class="mbsc-form-group-inset">
+                <button mbsc-button class="md-social-btn mbsc-btn-block" style="background:#3c5c9a;color:#fff;">
+                  <span class="mbsc-ic mbsc-ic-ion-social-facebook mbsc-pull-left"></span>
+                  Log in with Facebook
+              </button>
+                <button mbsc-button class="md-social-btn mbsc-btn-block" style="background:#28aae1;color:#fff;">
+                  <span class="mbsc-ic mbsc-ic-fa-twitter mbsc-pull-left"></span>
+                  Log in with Twitter
+              </button>
+                <button mbsc-button class="md-social-btn mbsc-btn-block" style="background:#d34230;color:#fff;">
+                  <span class="mbsc-ic mbsc-ic-fa-google mbsc-pull-left"></span>
+                  Log in with Google
+              </button>
+            </div>
+        </div>
+    </div>
+    <!--END Popup Add a new Site -->
+    <!--popover form  -->
+    <div id="popup-form-add-new-site">
+        <div mbsc-form>
+            <div class="mbsc-form-group-inset">
+                <div class="mbsc-form-group-title">Add a New Site</div>
+                <label>
+                Name
+                <input mbsc-input data-label-style="inline" type="text" placeholder="Site Name" />
+            </label>
+                <label>
+                Domain
+                <input mbsc-input data-label-style="inline" type="text" placeholder="domain name" />
+            </label>
+                <label>
+                Folder
+                <input mbsc-input data-label-style="inline" type="text" placeholder="Site Folder" />
+            </label>
+                <label>
+                DB Name
+                <input mbsc-input data-label-style="inline" type="text" placeholder="Database Name" />
+            </label>
+            </div>
+        </div>
+    </div>
+    <!--END popover form -->
+    </div>
+    <script src="js/mobiscroll.javascript.min.js"></script>
     <script>
+        //TODO: btn_deactivate_site make the site deactivate
+        //TODO: Add a new Site
         const {
             ipcRenderer
         } = require('electron');
 
         /* This is contain all the sites lists on our local machine */
         let aSites = [];
+        let active_site_id; //the active site shown in the right details 
 
         async function runCommand(cmd) {
             const res = await ipcRenderer.sendSync('runCommand', cmd);
@@ -51,27 +233,69 @@
         }
 
         /* Functions */
+
+        const update_wordget_credentials = (obj_wordget_credentials) => {
+            console.log('update_wordget_credentials');
+            console.log(obj_wordget_credentials);
+            ipcRenderer.send('update-wordget-credentials', obj_wordget_credentials);
+        }
+
         const restart_valet = () => {
             console.log('restarting valet services');
             ipcRenderer.send('restart-valet', 'restart-valet');
         }
 
-        const click_site = () => {
-            console.log('Clicked on Site');
-            //ipcRenderer.send('restart-valet', 'restart-valet');
+        const click_site = (e) => {
+            //console.log(e.target);
+            console.log('Clicked on Site' + e.target.getAttribute('data-site-id'));
+            get_site_details(e.target.getAttribute('data-site-id'));
+
         }
 
-        /* Gets the site details and shows them on the right part */
+
+        /* Shows the site details on the right part */
+        const show_site_details = (site_obj) => {
+                console.log(site_obj);
+                //TODO: 
+                document.querySelector('#l_rt_title').innerText = site_obj.site_name
+                document.querySelector('#l_rt_folder').innerText = site_obj.site_folder
+                document.querySelector('#l_rt_url > a').setAttribute('href', site_obj.site_domain);
+                document.querySelector('#l_rt_is_secure').innerText = site_obj.site_is_secure
+            }
+            /* Gets the site details and shows them on the right part */
         const get_site_details = (site_id) => {
-            console.log('Getting details for site' + site_id);
+            aSites.forEach(item => {
+                if (site_id == item.site_id) {
+                    active_site_id = item.site_id;
+                    show_site_details(item);
+                }
+            });
         }
-
-
 
         /* Event Handlers */
         document.querySelector('.btn_restart').addEventListener('click', () => {
             restart_valet();
         });
+
+        /* Saves wordget credentials in site folder */
+        document.querySelector('#btn_wordget_save').addEventListener('click', () => {
+            let wordget_args = {
+                site_id: active_site_id,
+                wordget_user: 'WORDGET_USER',
+                wordget_server: 'WORDGET_SERVER',
+                wordget_folder: 'WORDGET_FOLDER'
+            }
+            update_wordget_credentials(wordget_args);
+        });
+
+        document.querySelector('#l_rt_url > a').addEventListener('click', () => {
+            event.preventDefault();
+            let link = event.target.href;
+            require("electron").shell.openExternal(link);
+        });
+
+        //TODO: make the folder clickable through finder
+        //TODO: button open terminal at that folder
 
         // Async message handler
         ipcRenderer.on('asynchronous-reply', (event, arg) => {
@@ -80,6 +304,11 @@
 
         /* After receiving Valet Restart response */
         ipcRenderer.on('restart-valet-response', (event, arg) => {
+            console.log(arg);
+        });
+
+        /* After receiving Wordget Update response */
+        ipcRenderer.on('result-wordget-update', (event, arg) => {
             console.log(arg);
         });
 
@@ -101,7 +330,7 @@
                 let site_name = valetLine[1];
                 let site_domain = valetLine[3];
                 let site_is_secure = valetLine[2];
-                let site_path = valetLine[4];
+                let site_folder = valetLine[4];
 
                 //we assign a site id generated on each refresh - this is not permanent
                 nSiteID++;
@@ -111,13 +340,13 @@
                 oSite.site_name = site_name;
                 oSite.site_domain = site_domain;
                 oSite.site_is_secure = site_is_secure;
-                oSite.site_path = site_path;
+                oSite.site_folder = site_folder;
                 aSites.push(oSite);
 
                 console.log('site name' + site_name);
                 console.log('site_domain' + site_domain);
                 console.log('site_is_secure' + site_is_secure);
-                console.log('site_path' + site_path);
+                console.log('site_folder' + site_folder);
                 //create each li on the sidebar with the current host Sites
                 if (site_name) {
                     let new_site = document.createElement('div');
@@ -125,9 +354,8 @@
                     new_site.innerHTML = site_name;
                     new_site.setAttribute("data-site-id", nSiteID);
                     document.getElementById('l_sites').appendChild(new_site);
-                    new_site.addEventListener('click', () => {
-                        click_site();
-                    });
+                    new_site.addEventListener("click", click_site);
+
                 }
                 /* valetLine.forEach((row) => {
                   console.log(row);
@@ -137,6 +365,59 @@
         });
         /*Start the Main Window - inform main process that we are ready to get a list of sites*/
         ipcRenderer.send('main-start', 'Game start');
+        // create a datepicker with default settings
+        // Sets the theme to iOS and localization to German
+        /*mobiscroll */
+        mobiscroll.settings = {
+            touchUi: false,
+            theme: 'ios',
+            lang: 'en'
+        };
+
+        var login = mobiscroll.popup('#login', {
+            display: 'center',
+            buttons: [{
+                text: 'Log In',
+                handler: 'set'
+            }],
+            onMarkupReady: function(event, inst) {
+                var btns = event.target.querySelectorAll('.md-social-btn');
+                for (var i = 0; i < btns.length; ++i) {
+                    btns[i].addEventListener('click', function() {
+                        inst.hide();
+                    });
+                }
+            }
+        });
+
+        var popup_add_new_site = mobiscroll.popup('#popup-form-add-new-site', {
+            display: 'center',
+            cssClass: 'mbsc-no-padding',
+            buttons: [{
+                    text: 'Create',
+                    handler: 'set'
+                },
+                'cancel'
+            ]
+        });
+
+        document
+            .getElementById('btn_add_new_site')
+            .addEventListener('click', function() {
+                popup_add_new_site.show();
+            }, false);
+        /* Single Website - Tabs */
+        mobiscroll.nav('#single-site-tabs', {
+            theme: 'ios',
+            themeVariant: 'light',
+            type: 'tab',
+            context: '#tab-content',
+            onItemTap: function(event, inst) {
+                document.querySelector('.md-tab-sel').classList.remove('md-tab-sel');
+                document.querySelector('.' + event.target.getAttribute('data-tab')).classList.add('md-tab-sel');
+            }
+        });
+        /* END mobiscroll */
     </script>
 </body>
 

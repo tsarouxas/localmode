@@ -41,7 +41,7 @@ body {
     width: 100vw;
     height: 100vh;
     background: url(../img/link.svg) repeat top left;
-    color: 000000;
+    color: #000000;
 }
 
 #lmain {
@@ -59,28 +59,41 @@ body {
     align-items: center;
 }
 
+#lmain_l_inner {
+    padding-top: 0;
+}
+
+#lmain_r_inner {
+    padding: 30px;
+}
+
 #lmain_r {
-    width: -webkit-calc(70% - 220px);
-    width: -moz-calc(70% - 220px);
-    width: calc(70% - 220px);
+    padding: 0;
+}
+
+#lmain_r {
+    width: -webkit-calc(100% - 220px);
+    width: -moz-calc(100% - 220px);
+    width: calc(100% - 220px);
     height: 100vh
 }
 
 #l_l_top {
     height: 5vh;
-    padding-top: 20px;
     font-size: 18px;
     color: #ffffff;
+    padding-top: 35px;
     font-weight: 600;
 }
 
 #l_l_middle {
-    height: 90vh;
+    height: 85vh;
     width: 100%;
 }
 
 #l_l_footer {
     height: 5vh;
+    text-align: center;
 }
 
 #l_sites_container {
@@ -100,4 +113,75 @@ body {
     padding-top: 5px;
     padding-bottom: 5px;
     width: 90%;
+}
+
+#l_rt_title {
+    font-size: 42px;
+    color: #000000;
+}
+
+#l_rt_url {
+    font-size: 14px;
+    color: #c1c1c1;
+    /* display: flex; */
+    position: absolute;
+    right: 0;
+    /* justify-content: flex-end; */
+    top: 30px;
+}
+
+#l_rt_url>a {
+    color: #a4a4a4;
+    text-decoration: none;
+}
+
+#l_r_top {
+    position: relative;
+    width: 100%;
+}
+
+#l_rt_folder {
+    font-size: 14px;
+    color: #dddddd;
+}
+
+
+/* Buttons */
+
+.btn_round {
+    border-radius: 32px;
+    padding: 10px 20px;
+    border: 2px solid #c1c1c1;
+    background-color: #f4f4f4;
+}
+
+
+/*mobiscroll*/
+
+.md-social-btn .mbsc-ic {
+    float: left;
+}
+
+
+/*website tabs*/
+
+.md-tab-bottom-nav .md-desktop-nav {
+    min-height: 320px;
+    margin: 20px;
+    border: 1px solid #adadad;
+    position: relative;
+}
+
+.md-tab-bottom-nav .md-tab,
+.md-tab-bottom-nav .md-bottom {
+    display: none;
+}
+
+.md-tab-bottom-nav .md-tab-sel,
+.md-tab-bottom-nav .md-bottom-sel {
+    display: block;
+    height: 100%;
+    font-size: 18px;
+    font-weight: normal;
+    padding: 30px;
 }
