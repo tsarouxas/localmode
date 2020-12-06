@@ -72,24 +72,46 @@ const createWindow = () => {
 
     });
 
-    ipcMain.on('update-wordget-credentials', (event, arg) => {
-        console.log('running update-wordget-credentials' + arg);
-        console.log(arg);
-        //event.returnValue = await exec('ls -al', shell_callback);
-        let lyrics = 'But still I\'m having memories of high speeds when the cops crashed\n' +
-            'As I laugh, pushin the gas while my Glocks blast\n' +
-            'We was young and we was dumb but we had heart';
 
-        // write to a new file named 2pac.txt
-        fs.writeFile('2pac.txt', lyrics, (err) => {
-            // throws an error, you could also catch it here
+    ipcMain.on('fetch-wordget-credentials', (event, data) => {
+        console.log('running fetch-wordget-credentials from' + data);
+        //TODO: read wordget credentials if they  exist in .wordget.json
+
+        fs.readFile(data + '/.wordget.json', (err, read_data) => {
             if (err) throw err;
-
-            // success case, the file was saved
-            console.log('Lyric saved!');
-            event.sender.send('result-wordget-update', 'success');
+            event.sender.send('result-fetch-wordget-credentials', read_data);
+            //console.log(read_data);
         });
 
+
+    });
+
+
+    ipcMain.on('update-wordget-credentials', (event, data) => {
+        // console.log('running update-wordget-credentials' + data);
+        // console.log(data.site_folder);
+        // console.log(data.site_folder + '/.wordget.json');
+        //event.returnValue = await exec('ls -al', shell_callback);
+        // write to a new file named 2pac.txt
+
+        let data_wordget = {
+            wordget_user: data.wordget_user,
+            wordget_server: data.wordget_server,
+            wordget_port: data.wordget_port,
+            wordget_folder: data.wordget_folder
+        }
+
+        if (data.site_folder) {
+            let json_data = JSON.stringify(data_wordget, null, 2);
+            fs.writeFile(data.site_folder + '/.wordget.json', json_data, (err) => {
+                // throws an error, you could also catch it here
+                if (err) throw err;
+
+                // success case, the file was saved
+                console.log('Lyric saved!');
+                event.sender.send('result-wordget-update', 'success');
+            });
+        }
     });
 
     // Event handler for asynchronous incoming messages

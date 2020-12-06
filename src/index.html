@@ -102,7 +102,7 @@
                                                     <div class="mbsc-col-12 mbsc-form-grid">
                                                         <div class="mbsc-form-group-title">Wordget Information</div>
                                                         <div class="mbsc-row">
-                                                            <div class="mbsc-col-md-6 mbsc-col-12">
+                                                            <div class="mbsc-col-md-4 mbsc-col-12">
                                                                 <div>
                                                                     <label for="email">Username</label>
                                                                     <input mbsc-input data-input-style="box" data-label-style="floating" id="l_rt_wordget_username" name="rt_wg_username" class="ib_wordget" placeholder="Remote Username" />
@@ -112,6 +112,12 @@
                                                                 <div>
                                                                     <label for="pass">IP Address</label>
                                                                     <input mbsc-input data-input-style="box" data-label-style="floating" id="l_rt_wordget_server" class="ib_wordget" placeholder="Remote Server IP Address" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="mbsc-col-md-2 mbsc-col-12">
+                                                                <div>
+                                                                    <label for="pass">Port</label>
+                                                                    <input mbsc-input data-input-style="box" data-label-style="floating" id="l_rt_wordget_port" class="ib_wordget" placeholder="Remote Server Port" />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -226,9 +232,17 @@
         /* This is contain all the sites lists on our local machine */
         let aSites = [];
         let active_site_id; //the active site shown in the right details 
+        let active_site_folder; //the active site shown in the right details 
 
         async function runCommand(cmd) {
             const res = await ipcRenderer.sendSync('runCommand', cmd);
+            return res;
+        }
+
+
+        async function getWordgetCredentials(site_folder) {
+            const res = await ipcRenderer.send('fetch-wordget-credentials', site_folder);
+            console.log(res);
             return res;
         }
 
@@ -248,6 +262,13 @@
         const click_site = (e) => {
             //console.log(e.target);
             console.log('Clicked on Site' + e.target.getAttribute('data-site-id'));
+            //cleanup fields in right side
+            document.querySelector('#l_rt_wordget_username').value = null;
+            document.querySelector('#l_rt_wordget_server').value = null;
+            document.querySelector('#l_rt_wordget_port').value = null;
+            document.querySelector('#l_rt_wordget_folder').value = null;
+
+            //and get the new active site details
             get_site_details(e.target.getAttribute('data-site-id'));
 
         }
@@ -261,13 +282,20 @@
                 document.querySelector('#l_rt_folder').innerText = site_obj.site_folder
                 document.querySelector('#l_rt_url > a').setAttribute('href', site_obj.site_domain);
                 document.querySelector('#l_rt_is_secure').innerText = site_obj.site_is_secure
+
+
             }
             /* Gets the site details and shows them on the right part */
         const get_site_details = (site_id) => {
             aSites.forEach(item => {
                 if (site_id == item.site_id) {
                     active_site_id = item.site_id;
+                    active_site_folder = item.site_folder.trim();
+                    //show the site details
                     show_site_details(item);
+                    //get the wordget credentials if they exist in .wordget.json
+                    const wordget_credentials = getWordgetCredentials(active_site_folder);
+                    console.log(wordget_credentials);
                 }
             });
         }
@@ -281,9 +309,11 @@
         document.querySelector('#btn_wordget_save').addEventListener('click', () => {
             let wordget_args = {
                 site_id: active_site_id,
-                wordget_user: 'WORDGET_USER',
-                wordget_server: 'WORDGET_SERVER',
-                wordget_folder: 'WORDGET_FOLDER'
+                site_folder: active_site_folder,
+                wordget_user: document.querySelector('#l_rt_wordget_username').value,
+                wordget_server: document.querySelector('#l_rt_wordget_server').value,
+                wordget_port: document.querySelector('#l_rt_wordget_port').value,
+                wordget_folder: document.querySelector('#l_rt_wordget_folder').value
             }
             update_wordget_credentials(wordget_args);
         });
@@ -310,6 +340,23 @@
         /* After receiving Wordget Update response */
         ipcRenderer.on('result-wordget-update', (event, arg) => {
             console.log(arg);
+        });
+
+        /* After receiving Fetch Wordget Creedentials  response */
+        ipcRenderer.on('result-fetch-wordget-credentials', (event, arg) => {
+            //console.log(arg);
+            //incoming string comes in a buffer - similar to base64
+            var buf = Buffer.from(arg);
+            let wordget_json = JSON.parse(buf.toString());
+            console.log(wordget_json);
+            if (wordget_json) {
+                //fill in the wordget credetntials in the inputs
+                document.querySelector('#l_rt_wordget_username').value = wordget_json.wordget_user;
+                document.querySelector('#l_rt_wordget_server').value = wordget_json.wordget_server;
+                document.querySelector('#l_rt_wordget_port').value = wordget_json.wordget_port;
+                document.querySelector('#l_rt_wordget_folder').value = wordget_json.wordget_folder;
+            }
+            //TODO: you are here
         });
 
 
