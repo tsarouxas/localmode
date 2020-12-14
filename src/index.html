@@ -86,7 +86,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="mbsc-col-12">
-                                                                <button mbsc-button id="btn_wordget_submit" class="btn-large">Pull Site</button>
+                                                                <button mbsc-button id="btn_wordget_pull" class="btn-large">Pull Site</button>
                                                             </div>
 
                                                         </div>
@@ -254,6 +254,12 @@
             ipcRenderer.send('update-wordget-credentials', obj_wordget_credentials);
         }
 
+        const wordget_pull = (obj_wordget_credentials) => {
+            console.log('wordget_pull action');
+            console.log(obj_wordget_credentials);
+            ipcRenderer.send('wordget-pull', obj_wordget_credentials);
+        }
+
         const restart_valet = () => {
             console.log('restarting valet services');
             ipcRenderer.send('restart-valet', 'restart-valet');
@@ -278,10 +284,17 @@
         const show_site_details = (site_obj) => {
                 console.log(site_obj);
                 //TODO: 
-                document.querySelector('#l_rt_title').innerText = site_obj.site_name
-                document.querySelector('#l_rt_folder').innerText = site_obj.site_folder
+                let secure_mode_one = false;
+                let site_prefix = 'http://';
+                if (site_obj.site_is_secure.trim() == "X") {
+                    secure_mode_one = true;
+                    site_prefix = 'https://';
+                }
+                let full_site_url = site_prefix + site_obj.site_domain;
+                document.querySelector('#l_rt_title').innerText = site_obj.site_domain;
+                document.querySelector('#l_rt_folder').innerText = site_obj.site_folder;
                 document.querySelector('#l_rt_url > a').setAttribute('href', site_obj.site_domain);
-                document.querySelector('#l_rt_is_secure').innerText = site_obj.site_is_secure
+                document.querySelector('#l_rt_is_secure').innerText = site_obj.site_is_secure;
 
 
             }
@@ -316,6 +329,22 @@
                 wordget_folder: document.querySelector('#l_rt_wordget_folder').value
             }
             update_wordget_credentials(wordget_args);
+        });
+
+        /* Saves wordget credentials in site folder */
+        document.querySelector('#btn_wordget_pull').addEventListener('click', () => {
+            let wordget_args = {
+                site_id: active_site_id,
+                site_folder: active_site_folder,
+                wordget_option_files: document.querySelector('#wordget_option_files').checked,
+                wordget_option_database: document.querySelector('#wordget_option_database').checked,
+                wordget_option_uploads: document.querySelector('#wordget_option_uploads').checked,
+                wordget_user: document.querySelector('#l_rt_wordget_username').value,
+                wordget_server: document.querySelector('#l_rt_wordget_server').value,
+                wordget_port: document.querySelector('#l_rt_wordget_port').value,
+                wordget_folder: document.querySelector('#l_rt_wordget_folder').value
+            }
+            wordget_pull(wordget_args);
         });
 
         document.querySelector('#l_rt_url > a').addEventListener('click', () => {

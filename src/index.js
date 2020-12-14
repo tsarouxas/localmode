@@ -73,17 +73,20 @@ const createWindow = () => {
     });
 
 
-    ipcMain.on('fetch-wordget-credentials', (event, data) => {
-        console.log('running fetch-wordget-credentials from' + data);
-        //TODO: read wordget credentials if they  exist in .wordget.json
-
-        fs.readFile(data + '/.wordget.json', (err, read_data) => {
-            if (err) throw err;
-            event.sender.send('result-fetch-wordget-credentials', read_data);
-            //console.log(read_data);
-        });
-
-
+    ipcMain.on('fetch-wordget-credentials', (event, site_folder) => {
+        console.log('running fetch-wordget-credentials from' + site_folder);
+        //read wordget credentials if they  exist in .wordget.json
+        let site_wordget_file = site_folder + '/.wordget.json';
+        try {
+            if (fs.existsSync(site_wordget_file)) {
+                fs.readFile(site_wordget_file, (err, file_data) => {
+                    if (err) throw err;
+                    event.sender.send('result-fetch-wordget-credentials', file_data);
+                });
+            }
+        } catch (err) {
+            console.error(err)
+        }
     });
 
 
@@ -108,9 +111,41 @@ const createWindow = () => {
                 if (err) throw err;
 
                 // success case, the file was saved
-                console.log('Lyric saved!');
+                console.log('Wordget - Saved Options');
                 event.sender.send('result-wordget-update', 'success');
             });
+        }
+    });
+
+    /* Setup and run the wordget command on the localmachinee to Pull the website locally */
+    ipcMain.on('wordget-pull', (event, data) => {
+        //TODO: normalize the remote folder with trailing slash
+        //TODO: normalize the local folder with trailing slash
+        if (data.site_folder) {
+            console.log("data.wordget_port");
+            console.log(data.wordget_port);
+
+            let wordget_port = '';
+            if (!data.wordget_port || data.wordget_port === undefined) {
+                wordget_port = ' -p 22';
+            } else {
+                wordget_port = ' -p ' + data.wordget_port;
+            }
+
+            let wordget_extra_options = '';
+            if (data.wordget_option_database)
+                wordget_extra_options += ' -d vvv';
+            if (data.wordget_option_database == false) {
+                wordget_extra_options += ' -o vvv, exclude-uploads';
+            } else {
+                wordget_extra_options += ' -o vvv, exclude-uploads';
+            }
+            //run wordget and fetch site
+            const cmd_wordget = 'wordget ' + data.wordget_user + '@' + data.wordget_server + wordget_port + ' -s ' + data.wordget_folder + ' -t ' + data.site_folder + wordget_extra_options;
+            console.log('Wordget - Pull');
+            console.log(cmd_wordget);
+            event.sender.send('result-wordget-pull', 'success');
+
         }
     });
 
