@@ -21,6 +21,7 @@
                     </div>
                 </div>
                 <div id="l_l_footer">
+                    <div><button mbsc-button id="btn_popup_console_log">Console</button></div>
                     <div><button mbsc-button id="btn_add_new_site">Add New Site</button></div>
                 </div>
             </div>
@@ -166,6 +167,12 @@
         </div>
     </div>
 
+    <!--Popup Console Log -->
+    <div id="popup-console-log">
+        <div id="popup-console-log-inner">
+        </div>
+    </div>
+    <!--END Popup Console Log -->
     <!--Popup Add a new Site -->
     <div id="login" class="mbsc-cloak">
         <div mbsc-form>
@@ -366,6 +373,12 @@
             console.log(arg);
         });
 
+        /* After receiving messages from stdout on the console */
+        ipcRenderer.on('response-stdout', (event, arg) => {
+            document.querySelector('#popup-console-log-inner').innerHTML += arg;
+            popup_console_log.show();
+        });
+
         /* After receiving Wordget Update response */
         ipcRenderer.on('result-wordget-update', (event, arg) => {
             console.log(arg);
@@ -450,6 +463,9 @@
             lang: 'en'
         };
 
+        /* Popup Modals */
+
+        /* Popup Console Login */
         var login = mobiscroll.popup('#login', {
             display: 'center',
             buttons: [{
@@ -466,6 +482,24 @@
             }
         });
 
+        /* Popup Console Log */
+        var popup_console_log = mobiscroll.popup('#popup-console-log', {
+            display: 'center',
+            cssClass: 'mbsc-no-padding',
+            buttons: [{
+                text: 'OK',
+                handler: 'set'
+            }]
+        });
+
+        document
+            .getElementById('btn_popup_console_log')
+            .addEventListener('click', function() {
+                popup_console_log.show();
+            }, false);
+
+
+        /* Popup Add New Site */
         var popup_add_new_site = mobiscroll.popup('#popup-form-add-new-site', {
             display: 'center',
             cssClass: 'mbsc-no-padding',
@@ -482,6 +516,8 @@
             .addEventListener('click', function() {
                 popup_add_new_site.show();
             }, false);
+
+
         /* Single Website - Tabs */
         mobiscroll.nav('#single-site-tabs', {
             theme: 'ios',

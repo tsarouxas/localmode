@@ -8,7 +8,6 @@ const { spawn } = require('child_process');
 //https://github.com/electron/electron/issues/21674
 /* Event Handlers */
 
-
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
     app.quit();
@@ -119,11 +118,18 @@ const createWindow = () => {
 
     /* Setup and run the wordget command on the localmachinee to Pull the website locally */
     ipcMain.on('wordget-pull', (event, data) => {
-        //TODO: normalize the remote folder with trailing slash
-        //TODO: normalize the local folder with trailing slash
-        if (data.site_folder) {
-            console.log("data.wordget_port");
-            console.log(data.wordget_port);
+
+        if (data.site_folder && data.wordget_folder && data.wordget_user && data.wordget_server) {
+            //TODO: check if data.site_folder is actual folder on disk
+
+            //normalize the local folder with trailing slash
+            if (data.site_folder.charAt(data.site_folder.length - 1) != '/') {
+                data.site_folder += '/';
+            }
+            //normalize the remote folder with trailing slash
+            if (data.wordget_folder.charAt(data.wordget_folder.length - 1) != '/') {
+                data.wordget_folder += '/';
+            }
 
             let wordget_port = '';
             if (!data.wordget_port || data.wordget_port === undefined) {
@@ -134,17 +140,34 @@ const createWindow = () => {
 
             let wordget_extra_options = '';
             if (data.wordget_option_database)
-                wordget_extra_options += ' -d vvv';
-            if (data.wordget_option_database == false) {
-                wordget_extra_options += ' -o vvv, exclude-uploads';
+                wordget_extra_options += ' -d localmode';
+            if (data.wordget_option_uploads == false) {
+                wordget_extra_options += ' -o localmode,exclude-uploads';
             } else {
-                wordget_extra_options += ' -o vvv, exclude-uploads';
+                wordget_extra_options += ' -o localmode';
             }
             //run wordget and fetch site
-            const cmd_wordget = 'wordget ' + data.wordget_user + '@' + data.wordget_server + wordget_port + ' -s ' + data.wordget_folder + ' -t ' + data.site_folder + wordget_extra_options;
+            const cmd_wordget = 'cd ' + data.site_folder + ' && wordget -u ' + data.wordget_user + ' -h ' + data.wordget_server + wordget_port + ' -s ' + data.wordget_folder + ' -t ' + data.site_folder + wordget_extra_options;
             console.log('Wordget - Pull');
             console.log(cmd_wordget);
             event.sender.send('result-wordget-pull', 'success');
+
+            //run the wordget command for the given folder
+            if (data.wordget_option_files || data.wordget_option_database) {
+                exec(cmd_wordget, { maxBuffer: 1024 * 500 }, (error, stdout, stderr) => {
+                    if (error) {
+                        console.log(`error: ${error.message}`);
+                        event.sender.send('response-stdout', `${error.message}`);
+                        return;
+                    }
+                    if (stderr) {
+                        console.log(`stderr: ${stderr}`);
+                        event.sender.send('response-stdout', `${stdout}`);
+                        return;
+                    }
+                    event.sender.send('response-stdout', `${stdout}`);
+                });
+            }
 
         }
     });
